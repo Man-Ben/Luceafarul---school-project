@@ -24,10 +24,10 @@ public class Back : MonoBehaviour
 
     void Awake()
     {
-        backButton.onClick.AddListener(GoBack);
+        backButton.onClick.AddListener(OnBackButtonPressed);
     } 
 
-    void GoBack()
+    void OnBackButtonPressed()
     {
         CheckMenu();
 
@@ -45,9 +45,8 @@ public class Back : MonoBehaviour
                 back.SetActive(false);
                 break;
             case MenuState.Load:
-                startMenu.SetActive(true);
+                gameManagerMenu.SetActive(true);
                 loadMenu.SetActive(false);
-                back.SetActive(false);
                 break;
         }
     }

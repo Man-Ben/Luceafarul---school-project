@@ -1,16 +1,31 @@
 using UnityEngine;
+using UnityEngine.UI;
 
-[SerializeField] private class GameManagerMenu : MonoBehaviour
+public class GameManagerMenu : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] GameObject gameManagerMenu;
+    [SerializeField] GameObject createGameMenu;
+    [SerializeField] GameObject loadMenu;
+    [SerializeField] GameObject back;
+
+    [SerializeField] Button createButton;
+    [SerializeField] Button loadButton;
+
+    void Awake()
     {
-        
+        createButton.onClick.AddListener(OnCreateButtonPressed);
+        loadButton.onClick.AddListener(OnLoadButtonPressed);
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnCreateButtonPressed()
     {
-        
+        gameManagerMenu.SetActive(false);
+        back.SetActive(false);
+        createGameMenu.SetActive(true);
+    }
+    void OnLoadButtonPressed()
+    {
+        gameManagerMenu.SetActive(false);
+        loadMenu.SetActive(true);
     }
 }

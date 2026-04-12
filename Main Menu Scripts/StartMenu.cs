@@ -1,20 +1,22 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEditor.Actions;
+using UnityEditor;
 
 
-[SerializeField] private class StartMenu : MonoBehaviour
+public class StartMenu : MonoBehaviour
 {
 
-        [SerializeField] private GameObject startMenu;
-        [SerializeField] private GameObject gameManagerMenu;
-        [SerializeField] private GameObject settingMenu;
+        [SerializeField] GameObject startMenu;
+        [SerializeField] GameObject gameManagerMenu;
+        [SerializeField] GameObject settingsMenu;
 
+        [SerializeField] GameObject back;
 
-        [SerializeField] private Button gameButton;
-        [SerializeField] private Button settingsButton;
-        [SerializeField] private Button quitButton;
+        [SerializeField] Button gameButton;
+        [SerializeField] Button settingsButton;
+        [SerializeField] Button quitButton;
 
     void Awake()
     {
@@ -23,22 +25,32 @@ using TMPro;
 
     void AddListenerToUI()
     {
-        
+        gameButton.onClick.AddListener(OnGameButtonPressed);
+        settingsButton.onClick.AddListener(OnSettingsPressed);
+        quitButton.onClick.AddListener(OnQuitButtonPressed);
     }
 
     void OnGameButtonPressed()
     {
-        
+        startMenu.SetActive(false);
+        gameManagerMenu.SetActive(true);
+        back.SetActive(true);
     }
 
-    void OnExitButtonPressed()
+    void OnSettingsPressed()
     {
-        
+        startMenu.SetActive(false);
+        settingsMenu.SetActive(true);
+        back.SetActive(true);
     }
 
     void OnQuitButtonPressed()
     {
-        
+        #if UNITY_EDITOR
+            EditorApplication.ExitPlaymode();
+        #else
+            Application.Quit();
+        #endif
     }
 
 
