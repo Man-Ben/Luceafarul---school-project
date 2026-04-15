@@ -1,16 +1,57 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LoadMenu : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    /*There will be a scrollview logic and a logic for the Delete and Load buttons. All this after the save system is created.
+      Attention: when you implement the scrollview, don't forget to replace the saveAndDelete to a prefab!!!
+    */
+
+    [SerializeField] Button loadButton;
+    [SerializeField] Button deleteButton;
+    [SerializeField] Button yesButton;
+    [SerializeField] Button cancelButton;
+
+
+    [SerializeField] GameObject saveAndDelete;
+    [SerializeField] GameObject confirmDeleteMessage;
+
+    int loadedSceneIndex = 1;
+
+    void Awake()
     {
-        
+        AddListenerToUI();
     }
 
-    // Update is called once per frame
-    void Update()
+    void AddListenerToUI()
     {
-        
+        loadButton.onClick.AddListener(OnLoadButtonPressed);
+        deleteButton.onClick.AddListener(OnDeleteButtonPressed);
+        yesButton.onClick.AddListener(OnYesButtonPressed);
+        cancelButton.onClick.AddListener(OnCancelButtonPressed);
+    }
+
+    void OnLoadButtonPressed()
+    {
+        //Load users data from file. Load the scene. With an instance send the read data to the loaded scene.
+        SceneManager.LoadScene(loadedSceneIndex);
+    }
+
+    void OnDeleteButtonPressed()
+    {
+        confirmDeleteMessage.SetActive(true);
+    }
+
+    void OnYesButtonPressed()
+    {
+        Debug.Log("World Deleted!");
+        //Add a method to delete the save file.
+        confirmDeleteMessage.SetActive(false);
+    }
+
+    void OnCancelButtonPressed()
+    {
+        confirmDeleteMessage.SetActive(false);
     }
 }
