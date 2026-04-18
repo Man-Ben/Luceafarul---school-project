@@ -4,50 +4,54 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    
-    [SerializeField] List<GameObject> collectible;
-    [SerializeField] List<GameObject> obstacle;
-    [SerializeField] List<GameObject> recovery;
-    
-    void Start()
+   
+    void Update()
     {
-        StartCoroutine(SpawnDelayObstacle());
-        StartCoroutine(SpawnDelayCollectible());
-        StartCoroutine(SpawnDelayRecovery());
+        if(Pool.Instance != null)
+            Spawn();
     }
 
-    void Spawn(List<GameObject> toSpawn)
+    void Spawn()
     {
-        Instantiate(toSpawn[Random.Range(0, toSpawn.Count)], new Vector2(20, Random.Range(-2.9f, 3.5f)), Quaternion.identity);
+        int possibility = Random.Range(1, 10);
+
+        GameObject gotObject;
+
+        switch(possibility)
+        {
+            case <= 6:
+                gotObject = Pool.Instance.GivePooledObject(Pool.PoolState.Obstacle);
+            break;
+
+            case > 6 and <= 8:
+                gotObject = Pool.Instance.GivePooledObject(Pool.PoolState.Recovery);
+            break;
+
+            case > 8:
+                gotObject = Pool.Instance.GivePooledObject(Pool.PoolState.Collectible);
+            break;
+        }
+
+    if(gotObject != null)
+        gotObject.transform.position = new Vector2(20, GetSpawn());
     }
 
-    IEnumerator SpawnDelayObstacle()
+    float GetSpawn()
     {
-        while(true)
-        {
-            yield return new WaitForSeconds(1);
-            Spawn(obstacle);
-        }
-        
-    }
-    IEnumerator SpawnDelayCollectible()
-    {
-        while(true)
-        {
-            yield return new WaitForSeconds(5);
-            Spawn(collectible);
-        }
-        
-    
-    }
-    IEnumerator SpawnDelayRecovery()
-    {
-        while(true)
-        {
-            yield return new WaitForSeconds(7);
-            Spawn(recovery);
-        }
-        
+        float minY = Camera.main.ViewportToWorldPoint(new Vector2(0, 0)).y;
+        float maxY = Camera.main.ViewportToWorldPoint(new Vector2(0, 1)).y;
+
+        float direction = Random.value < 0.5f ? -1f : 1f;
+
+        float lastSpawn = 0;
+
+        float y = lastSpawn + direction * Random.Range(2, 4);
+
+        y = Mathf.Clamp(y, minY, maxY);
+
+        lastSpawn = y;
+
+        return y;
     }
 
 }
