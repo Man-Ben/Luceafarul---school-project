@@ -35,20 +35,20 @@ public class CreateGameMenu : MonoBehaviour
 
     void AddListenerToUI()
     {
-        creatButton.onClick.AddListener(OnCreateButtonPressed);
-        cancelButton.onClick.AddListener(OnCancelButtonPressed);
+        creatButton.onClick.AddListener(OnCreateButtonClicked);
+        cancelButton.onClick.AddListener(OnCancelButtonClicked);
         difficulty.onValueChanged.AddListener(OnDropDownValueChanged);
         gameNameInput.onEndEdit.AddListener(OnTextWrote);
 
     }
 
-    void OnCreateButtonPressed()
+    void OnCreateButtonClicked()
     {
         SceneManager.LoadScene(1);
         //Save player's data (diff, name)
     }
 
-    void OnCancelButtonPressed()
+    void OnCancelButtonClicked()
     {
         gameManagerMenu.SetActive(true);
         back.SetActive(true);

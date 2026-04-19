@@ -13,17 +13,17 @@ public class GameManagerMenu : MonoBehaviour
 
     void Awake()
     {
-        createMenuButton.onClick.AddListener(OnCreateMenuButtonPressed);
-        loadMenuButton.onClick.AddListener(OnLoadMenuButtonPressed);
+        createMenuButton.onClick.AddListener(OnCreateMenuButtonClicked);
+        loadMenuButton.onClick.AddListener(OnLoadMenuButtonClicked);
     }
 
-    void OnCreateMenuButtonPressed()
+    void OnCreateMenuButtonClicked()
     {
         gameManagerMenu.SetActive(false);
         back.SetActive(false);
         createGameMenu.SetActive(true);
     }
-    void OnLoadMenuButtonPressed()
+    void OnLoadMenuButtonClicked()
     {
         /*
         Inactivate the load menu. Write an if-statement to check if there's a file to load. If the file exists set the menu active. 

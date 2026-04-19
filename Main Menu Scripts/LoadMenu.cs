@@ -26,31 +26,31 @@ public class LoadMenu : MonoBehaviour
 
     void AddListenerToUI()
     {
-        loadButton.onClick.AddListener(OnLoadButtonPressed);
-        deleteButton.onClick.AddListener(OnDeleteButtonPressed);
-        yesButton.onClick.AddListener(OnYesButtonPressed);
-        cancelButton.onClick.AddListener(OnCancelButtonPressed);
+        loadButton.onClick.AddListener(OnLoadButtonClicked);
+        deleteButton.onClick.AddListener(OnDeleteButtonClicked);
+        yesButton.onClick.AddListener(OnYesButtonClicked);
+        cancelButton.onClick.AddListener(OnCancelButtonClicked);
     }
 
-    void OnLoadButtonPressed()
+    void OnLoadButtonClicked()
     {
         //Load users data from file. Load the scene. With an instance send the read data to the loaded scene.
         SceneManager.LoadScene(loadedSceneIndex);
     }
 
-    void OnDeleteButtonPressed()
+    void OnDeleteButtonClicked()
     {
         confirmDeleteMessage.SetActive(true);
     }
 
-    void OnYesButtonPressed()
+    void OnYesButtonClicked()
     {
         Debug.Log("World Deleted!");
         //Add a method to delete the save file.
         confirmDeleteMessage.SetActive(false);
     }
 
-    void OnCancelButtonPressed()
+    void OnCancelButtonClicked()
     {
         confirmDeleteMessage.SetActive(false);
     }

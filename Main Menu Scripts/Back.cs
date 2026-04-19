@@ -24,10 +24,10 @@ public class Back : MonoBehaviour
 
     void Awake()
     {
-        backButton.onClick.AddListener(OnBackButtonPressed);
+        backButton.onClick.AddListener(OnBackButtonClicked);
     } 
 
-    void OnBackButtonPressed()
+    void OnBackButtonClicked()
     {
         CheckMenu();
 

@@ -25,26 +25,26 @@ public class StartMenu : MonoBehaviour
 
     void AddListenerToUI()
     {
-        gameButton.onClick.AddListener(OnGameButtonPressed);
-        settingsButton.onClick.AddListener(OnSettingsPressed);
-        quitButton.onClick.AddListener(OnQuitButtonPressed);
+        gameButton.onClick.AddListener(OnGameButtonClicked);
+        settingsButton.onClick.AddListener(OnSettingsClicked);
+        quitButton.onClick.AddListener(OnQuitButtonClicked);
     }
 
-    void OnGameButtonPressed()
+    void OnGameButtonClicked()
     {
         startMenu.SetActive(false);
         gameManagerMenu.SetActive(true);
         back.SetActive(true);
     }
 
-    void OnSettingsPressed()
+    void OnSettingsClicked()
     {
         startMenu.SetActive(false);
         settingsMenu.SetActive(true);
         back.SetActive(true);
     }
 
-    void OnQuitButtonPressed()
+    void OnQuitButtonClicked()
     {
         #if UNITY_EDITOR
             EditorApplication.ExitPlaymode();
