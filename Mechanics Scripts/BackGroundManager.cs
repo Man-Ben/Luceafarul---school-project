@@ -16,12 +16,12 @@ public class BackgroundManager : MonoBehaviour
     void Start()
     {
         width = panels[0].GetComponent<SpriteRenderer>().bounds.size.x;
-
     }
 
     void Update()
     {
-        Moving();
+        if(UIManager.Instance.gameState != UIManager.GameState.GameOver && UIManager.Instance.gameState != UIManager.GameState.Paused)
+            Moving();
     }
 
     void Moving()

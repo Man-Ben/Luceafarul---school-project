@@ -22,13 +22,22 @@ public class SpawnedObjectMove : MonoBehaviour
 
     void Move()
     {
-        objectRb.AddForce(Vector2.left * objectSpeed, ForceMode2D.Force);
+        if(UIManager.Instance.gameState == UIManager.GameState.GameOver || UIManager.Instance.gameState == UIManager.GameState.Paused)
+        {
+            objectRb.linearVelocity = Vector2.zero;
+            objectRb.angularVelocity = 0f;
+        }
+        else
+            objectRb.linearVelocity = Vector2.left * objectSpeed;
     }
 
     void OutOfBounds()
     {
         if(gameObject.transform.position.x < boundX)
         {
+            if(gameObject.CompareTag("Obstacle"))
+                GameProgress.Instance.UpdateScore(10);
+
             gameObject.SetActive(false);
             gameObject.transform.position = new Vector2(20, 0);
             objectRb.linearVelocity = Vector2.zero;
