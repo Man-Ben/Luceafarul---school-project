@@ -17,7 +17,7 @@ public class UIManager : MonoBehaviour
 
     public enum GameState
     {
-        Resumed,
+        Neutral,
         Paused,
         GameOver
     }
@@ -44,7 +44,7 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
-        GameOver();
+        //GameOver();
         OnEscPressed();
     }
 
@@ -58,7 +58,7 @@ public class UIManager : MonoBehaviour
 
     void GameOver()
     {
-        if(PlayerController.Instance.playerState == PlayerController.PlayerState.Death)
+        //if()
         {
             gameOvermenu.SetActive(true);
             quitButton.gameObject.SetActive(true);
@@ -101,7 +101,7 @@ public class UIManager : MonoBehaviour
         pauseMenu.SetActive(false);
         quitButton.gameObject.SetActive(false);
         pauseButtonMobile.gameObject.SetActive(true);
-        gameState = GameState.Resumed;
+        gameState = GameState.Neutral;
     }
 
     void OnYesButtonClicked()

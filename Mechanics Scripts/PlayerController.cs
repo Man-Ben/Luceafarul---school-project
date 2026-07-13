@@ -2,21 +2,27 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] float ascendForce = 5;
+    [Header ("Forces")]
+    [Range(0.0f, 10.0f)]
+    [SerializeField] float ascendForce;
 
+    [Space]
+
+    [Header ("Bounds")]
     [SerializeField] GameObject bottomBound;
     
     Rigidbody2D playerRb;
-
+    
     public enum PlayerState
     {
         Neutral,
-        Death,
         HasRecovery,
         Collected,
-
     }
 
+    [Space]
+
+    [Header ("State")]
     public PlayerState playerState;
 
     public static PlayerController Instance;
@@ -38,25 +44,22 @@ public class PlayerController : MonoBehaviour
         playerRb = GetComponent<Rigidbody2D>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
             Fly();
     }
 
     void Fly()
     {
-        if(playerState != PlayerState.Death && UIManager.Instance.gameState != UIManager.GameState.Paused)
-            if(Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
-            {
+        if(UIManager.Instance.gameState == UIManager.GameState.Neutral)
+            if(Input.GetMouseButtonDown(0))
                 playerRb.AddForce(Vector2.up * ascendForce, ForceMode2D.Impulse);
-            }
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Obstacle") && UIManager.Instance.gameState == UIManager.GameState.Resumed)
+        if(collision.CompareTag("Obstacle") && UIManager.Instance.gameState == UIManager.GameState.Neutral)
         {
-            playerState = PlayerState.Death;
             bottomBound.SetActive(false);
         }
         else 
@@ -67,5 +70,4 @@ public class PlayerController : MonoBehaviour
                 playerState = PlayerState.Collected;
 
     }
-
 }

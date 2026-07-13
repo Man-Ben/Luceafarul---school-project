@@ -16,7 +16,7 @@ public class Spawner : MonoBehaviour
         {
             int randomDelay = Random.Range(1, 2);
             
-            yield return new WaitUntil(() => UIManager.Instance.gameState == UIManager.GameState.Resumed);
+            yield return new WaitUntil(() => UIManager.Instance.gameState == UIManager.GameState.Neutral);
 
             if(Pool.Instance != null)
                Spawn();
@@ -60,13 +60,6 @@ public class Spawner : MonoBehaviour
         float maxY = Camera.main.ViewportToWorldPoint(new Vector2(0, 1)).y;
 
         float y = Random.Range(minY, maxY);
-        float lastSpawn = 0;
-        float minGap = 2f;
-
-        if(Mathf.Abs(y-lastSpawn) < minGap)
-            y += minGap * Mathf.Sign(Random.value - 0.5f);
-
-        lastSpawn = y;
 
         return y;
     }

@@ -2,62 +2,64 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Back : MonoBehaviour
-{
-    [SerializeField] Button backButton;
+{    
+    [Header ("Set a button for going back")]
+    [SerializeField] Button back;
+    [Space]
 
-    [SerializeField] GameObject back;
-
+    [Header ("Set Menu Fields")]
     [SerializeField] GameObject startMenu;
-    [SerializeField] GameObject gameManagerMenu;
     [SerializeField] GameObject settingsMenu;
+    [SerializeField] GameObject loadAndCreate;
     [SerializeField] GameObject loadMenu;
 
-    MenuState currentMenu;
-
-
-    enum MenuState
+    enum CurrentMenu
     {
-        GameManager,
         Settings,
+        Manager,
         Load
     }
 
+    CurrentMenu currentMenu;
+
     void Awake()
     {
-        backButton.onClick.AddListener(OnBackButtonClicked);
-    } 
+        back.onClick.AddListener(OnBackClicked);
+    }
 
-    void OnBackButtonClicked()
+    void OnBackClicked()
     {
-        CheckMenu();
+
+        CheckWhichMenu();
 
         switch(currentMenu)
         {
-            case MenuState.GameManager:
-                startMenu.SetActive(true);
-                gameManagerMenu.SetActive(false);
-                back.SetActive(false);
-                break;
-
-            case MenuState.Settings:
-                startMenu.SetActive(true);
+            case CurrentMenu.Settings:
                 settingsMenu.SetActive(false);
-                back.SetActive(false);
+                startMenu.SetActive(true);
+                gameObject.SetActive(false);
                 break;
-            case MenuState.Load:
-                gameManagerMenu.SetActive(true);
+            case CurrentMenu.Manager:
+                loadAndCreate.SetActive(false);
+                startMenu.SetActive(true);
+                gameObject.SetActive(false);
+                break;
+            case CurrentMenu.Load:
                 loadMenu.SetActive(false);
+                loadAndCreate.SetActive(true);
                 break;
         }
     }
 
-    void CheckMenu()
+    void CheckWhichMenu()
     {
-        if(gameManagerMenu.activeInHierarchy)
-            currentMenu = MenuState.GameManager;
-        else if(settingsMenu.activeInHierarchy)
-            currentMenu = MenuState.Settings;
-        else if(loadMenu.activeInHierarchy)
-            currentMenu = MenuState.Load;
+        if(settingsMenu.activeInHierarchy)
+            currentMenu = CurrentMenu.Settings;
+        else
+            if(loadAndCreate.activeInHierarchy)
+                currentMenu = CurrentMenu.Manager;
+        else
+            if(loadMenu.activeInHierarchy)
+                currentMenu = CurrentMenu.Load;
     }
 }
