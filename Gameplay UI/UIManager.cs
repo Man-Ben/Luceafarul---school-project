@@ -1,19 +1,26 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    [Header ("Menus")]
     [SerializeField] GameObject gameOvermenu;
     [SerializeField] GameObject pauseMenu;
     [SerializeField] GameObject confirmPopUp;
 
+    [Space]
+
+    [Header ("Menu buttons")]
     [SerializeField] Button restartButton;
     [SerializeField] Button quitButton;
     [SerializeField] Button resumeButton;
     [SerializeField] Button pauseButtonMobile;
     [SerializeField] Button yesButton;
     [SerializeField] Button cancelButton;
+
+
 
     public enum GameState
     {
@@ -24,7 +31,7 @@ public class UIManager : MonoBehaviour
 
     public GameState gameState;
 
-    public static UIManager Instance;
+    public static UIManager Instance {get; private set;}
 
     void Awake()
     {
@@ -44,7 +51,6 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
-        //GameOver();
         OnEscPressed();
     }
 
@@ -54,18 +60,16 @@ public class UIManager : MonoBehaviour
         quitButton.onClick.AddListener(OnQuitButtonClicked);
         pauseButtonMobile.onClick.AddListener(OnPauseButtonClicked);
         resumeButton.onClick.AddListener(OnResumeButtonClicked);
+        yesButton.onClick.AddListener(OnYesButtonClicked);
+        cancelButton.onClick.AddListener(OnCancelButtonClicked);
     }
 
-    void GameOver()
+    public void GameOver()
     {
-        //if()
-        {
             gameOvermenu.SetActive(true);
             quitButton.gameObject.SetActive(true);
             resumeButton.gameObject.SetActive(false);
-            gameState = GameState.GameOver;
-        }
-            
+            gameState = GameState.GameOver;    
     }
 
     void OnRestartButtonClicked()
@@ -75,7 +79,14 @@ public class UIManager : MonoBehaviour
 
     void OnQuitButtonClicked()
     {
+        if(gameState == GameState.Paused)
+            pauseMenu.SetActive(false);
+        else
+            if(gameState == GameState.GameOver)
+                gameOvermenu.SetActive(false);
+        
         confirmPopUp.SetActive(true);
+        quitButton.gameObject.SetActive(false);
     }
 
     void OnEscPressed()
@@ -84,7 +95,6 @@ public class UIManager : MonoBehaviour
         {
             pauseMenu.SetActive(true);
             quitButton.gameObject.SetActive(true);
-            pauseButtonMobile.gameObject.SetActive(false);
             gameState = GameState.Paused;
         }
     }
@@ -94,6 +104,7 @@ public class UIManager : MonoBehaviour
         pauseMenu.SetActive(true);
         quitButton.gameObject.SetActive(true);
         gameState = GameState.Paused;
+        pauseButtonMobile.gameObject.SetActive(false);
     }
 
     void OnResumeButtonClicked()
@@ -111,6 +122,13 @@ public class UIManager : MonoBehaviour
 
     void OnCancelButtonClicked()
     {
+        if(gameState == GameState.Paused)
+            pauseMenu.SetActive(true);
+        else
+            if(gameState == GameState.GameOver)
+                gameOvermenu.SetActive(true);
+
+        quitButton.gameObject.SetActive(true);
         confirmPopUp.SetActive(false);
     }
 

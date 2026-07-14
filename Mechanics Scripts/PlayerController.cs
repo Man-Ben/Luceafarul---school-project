@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -9,15 +11,21 @@ public class PlayerController : MonoBehaviour
     [Space]
 
     [Header ("Bounds")]
+    [Tooltip ("This is used to inactivate the bottom bound, for falling imitation")]
     [SerializeField] GameObject bottomBound;
+
+    [Space]
+
+    [Header ("Shield")]
+    [SerializeField] GameObject shield;
     
     Rigidbody2D playerRb;
     
     public enum PlayerState
     {
         Neutral,
-        HasRecovery,
-        Collected,
+        Damaged,
+        ActiveShield,
     }
 
     [Space]
@@ -26,6 +34,8 @@ public class PlayerController : MonoBehaviour
     public PlayerState playerState;
 
     public static PlayerController Instance;
+
+    bool canReactivate;
 
     void Awake()
     {
@@ -37,6 +47,7 @@ public class PlayerController : MonoBehaviour
 
         Instance = this;
 
+        canReactivate = true;
     }
 
     void Start()
@@ -47,6 +58,10 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
             Fly();
+            ActivateShield();
+
+            if(UIManager.Instance.gameState == UIManager.GameState.GameOver)
+                bottomBound.SetActive(false);
     }
 
     void Fly()
@@ -56,18 +71,55 @@ public class PlayerController : MonoBehaviour
                 playerRb.AddForce(Vector2.up * ascendForce, ForceMode2D.Impulse);
     }
 
+    IEnumerator ShieldCountDown()
+    {
+        yield return new WaitForSecondsRealtime(5);
+
+        shield.SetActive(false);
+        canReactivate = false;
+
+        StartCoroutine(TimeForReactivateShield());
+    }
+
+    IEnumerator TimeForReactivateShield()
+    {
+        playerState = PlayerState.Neutral;
+        yield return new WaitForSecondsRealtime(10);
+        canReactivate = true;
+    }
+
+    void ActivateShield()
+    {
+        if(Input.GetMouseButtonDown(1) && playerState != PlayerState.ActiveShield && canReactivate)
+        {
+            shield.SetActive(true);
+            playerState = PlayerState.ActiveShield;
+            StartCoroutine(ShieldCountDown());   
+        }
+
+    }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Obstacle") && UIManager.Instance.gameState == UIManager.GameState.Neutral)
+        if(UIManager.Instance.gameState == UIManager.GameState.Neutral)
         {
-            bottomBound.SetActive(false);
+            if(playerState != PlayerState.ActiveShield)
+                if(collision.CompareTag("Obstacle"))
+                {
+                    HpManager.Instance.InactivateHealth();
+                }
+                else 
+                    if(collision.CompareTag("Recovery"))
+                    {
+                        HpManager.Instance.Healing();
+                    }
+                else
+                    if(collision.CompareTag("Collectible"))
+                    {
+                        GameProgress.Instance.UpdateProgressBar();  
+                    }
+            collision.gameObject.SetActive(false);
         }
-        else 
-            if(collision.CompareTag("Recovery"))
-                playerState = PlayerState.HasRecovery;
-        else
-            if(collision.CompareTag("Collectible"))
-                playerState = PlayerState.Collected;
-
+        
     }
 }

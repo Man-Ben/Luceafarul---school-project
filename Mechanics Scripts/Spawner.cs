@@ -39,10 +39,10 @@ public class Spawner : MonoBehaviour
             break;
 
             case > 80 and <= 95:
-                if(PlayerController.Instance.playerState != PlayerController.PlayerState.HasRecovery)
+                if(HpManager.Instance.healthState == HpManager.HealthState.Damaged)
                     gotObject = Pool.Instance.GivePooledObject(Pool.PoolState.Recovery);
                 else
-                    gotObject = null;
+                    gotObject = Pool.Instance.GivePooledObject(Pool.PoolState.Obstacle);
             break;
 
             case > 95:
@@ -56,8 +56,8 @@ public class Spawner : MonoBehaviour
 
     float GetSpawn()
     {
-        float minY = Camera.main.ViewportToWorldPoint(new Vector2(0, 0)).y;
-        float maxY = Camera.main.ViewportToWorldPoint(new Vector2(0, 1)).y;
+        float minY = -5;
+        float maxY = 0;
 
         float y = Random.Range(minY, maxY);
 

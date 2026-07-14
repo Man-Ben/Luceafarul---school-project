@@ -5,7 +5,6 @@ public class SpawnedObjectMove : MonoBehaviour
     [SerializeField] float objectSpeed;
     float boundX;
 
-
     Rigidbody2D objectRb;
 
     void Awake()
