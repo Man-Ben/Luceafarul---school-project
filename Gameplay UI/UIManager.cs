@@ -20,8 +20,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] Button yesButton;
     [SerializeField] Button cancelButton;
 
-
-
     public enum GameState
     {
         Neutral,
@@ -29,6 +27,9 @@ public class UIManager : MonoBehaviour
         GameOver
     }
 
+    [Space]
+    
+    [Header ("State")]
     public GameState gameState;
 
     public static UIManager Instance {get; private set;}
@@ -46,7 +47,10 @@ public class UIManager : MonoBehaviour
         AddListenerToUI();
 
         if(Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer || Application.isEditor)
+        {
             pauseButtonMobile.gameObject.SetActive(true);
+            pauseButtonMobile.onClick.AddListener(OnPauseButtonClicked);
+        }     
     }
 
     void Update()
@@ -58,7 +62,6 @@ public class UIManager : MonoBehaviour
     {
         restartButton.onClick.AddListener(OnRestartButtonClicked);
         quitButton.onClick.AddListener(OnQuitButtonClicked);
-        pauseButtonMobile.onClick.AddListener(OnPauseButtonClicked);
         resumeButton.onClick.AddListener(OnResumeButtonClicked);
         yesButton.onClick.AddListener(OnYesButtonClicked);
         cancelButton.onClick.AddListener(OnCancelButtonClicked);

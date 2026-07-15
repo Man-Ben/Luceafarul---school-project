@@ -1,26 +1,40 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Pool : MonoBehaviour
 {
-    public static Pool Instance {get; private set;}
+
+    [Header ("Pools")]
     public List<GameObject> pooledObstacles;
     public List<GameObject> pooledCollectibles;
     public List<GameObject> pooledRecoveries;
+    public List<GameObject> pooledFireProtection;
+
+    [Space]
+
+    [Header ("Objects to pool")]
 
     [SerializeField] List<GameObject> obstaclesToPool;
     [SerializeField] List<GameObject> collectiblesToPool;
     [SerializeField] List<GameObject> recoveriesToPool;
+    [SerializeField] List<GameObject> fireProtectionToPool;
 
     public enum PoolState
     {
         Obstacle,
         Collectible,
-        Recovery
+        Recovery,
+        FireProtection,
     }
 
+    [Space]
+
+    [Header ("State")]
     public PoolState poolState;
+
+    public static Pool Instance {get; private set;}
 
     void Awake()
     {
@@ -35,6 +49,10 @@ public class Pool : MonoBehaviour
         PoolingObjects(obstaclesToPool, pooledObstacles, 20);
         PoolingObjects(collectiblesToPool, pooledCollectibles, 5);
         PoolingObjects(recoveriesToPool, pooledRecoveries, 10);
+
+        if(SceneManager.GetActiveScene().buildIndex == 2)
+            PoolingObjects(fireProtectionToPool, pooledFireProtection, 10);
+        
     }
 
     void PoolingObjects(List<GameObject> objectToPool, List<GameObject> pooledObject, int amountToPool)
@@ -72,9 +90,11 @@ public class Pool : MonoBehaviour
             case PoolState.Collectible:
                 return GetPooledObjects(pooledCollectibles);
 
-
             case PoolState.Recovery:
                 return GetPooledObjects(pooledRecoveries);
+            
+            case PoolState.FireProtection:
+                return GetPooledObjects(pooledFireProtection);
 
             default: 
                 return null;

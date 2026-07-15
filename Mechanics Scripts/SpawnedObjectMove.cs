@@ -2,7 +2,10 @@ using UnityEngine;
 
 public class SpawnedObjectMove : MonoBehaviour
 {
+    [Header ("Speed")]
+    [Range (0.0f, 20.0f)]
     [SerializeField] float objectSpeed;
+    
     float boundX;
 
     Rigidbody2D objectRb;

@@ -1,31 +1,26 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     [Header ("Forces")]
-    [Range(0.0f, 10.0f)]
+    [Range(0.0f, 20.0f)]
     [SerializeField] float ascendForce;
 
     [Space]
 
     [Header ("Bounds")]
-    [Tooltip ("This is used to inactivate the bottom bound, for falling imitation")]
+    [Tooltip ("This is used to inactivate the bottom bound for falling")]
     [SerializeField] GameObject bottomBound;
-
-    [Space]
-
-    [Header ("Shield")]
-    [SerializeField] GameObject shield;
     
     Rigidbody2D playerRb;
     
     public enum PlayerState
     {
         Neutral,
-        Damaged,
-        ActiveShield,
+        hasFireProtection,
     }
 
     [Space]
@@ -34,8 +29,6 @@ public class PlayerController : MonoBehaviour
     public PlayerState playerState;
 
     public static PlayerController Instance;
-
-    bool canReactivate;
 
     void Awake()
     {
@@ -47,18 +40,12 @@ public class PlayerController : MonoBehaviour
 
         Instance = this;
 
-        canReactivate = true;
-    }
-
-    void Start()
-    {
         playerRb = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
             Fly();
-            ActivateShield();
 
             if(UIManager.Instance.gameState == UIManager.GameState.GameOver)
                 bottomBound.SetActive(false);
@@ -71,39 +58,34 @@ public class PlayerController : MonoBehaviour
                 playerRb.AddForce(Vector2.up * ascendForce, ForceMode2D.Impulse);
     }
 
-    IEnumerator ShieldCountDown()
+    IEnumerator InactivateFireProtection()
     {
+        yield return new WaitUntil(() => UIManager.Instance.gameState == UIManager.GameState.Neutral);
+        
         yield return new WaitForSecondsRealtime(5);
-
-        shield.SetActive(false);
-        canReactivate = false;
-
-        StartCoroutine(TimeForReactivateShield());
-    }
-
-    IEnumerator TimeForReactivateShield()
-    {
         playerState = PlayerState.Neutral;
-        yield return new WaitForSecondsRealtime(10);
-        canReactivate = true;
-    }
-
-    void ActivateShield()
-    {
-        if(Input.GetMouseButtonDown(1) && playerState != PlayerState.ActiveShield && canReactivate)
-        {
-            shield.SetActive(true);
-            playerState = PlayerState.ActiveShield;
-            StartCoroutine(ShieldCountDown());   
-        }
-
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
         if(UIManager.Instance.gameState == UIManager.GameState.Neutral)
         {
-            if(playerState != PlayerState.ActiveShield)
+            if(ShieldScript.Instance.shieldState != ShieldScript.ShieldState.Active)
+            {
+                if(SceneManager.GetActiveScene().buildIndex == 2)
+                {
+                    if(collision.CompareTag("Lava") && playerState == PlayerState.Neutral)
+                    {
+                        HpManager.Instance.InactivateHealth();
+                    }
+                    
+                    if(collision.CompareTag("FireProtection") && playerState == PlayerState.Neutral)
+                    {
+                        playerState = PlayerState.hasFireProtection;
+                        StartCoroutine(InactivateFireProtection());
+                    }
+                }
+                
                 if(collision.CompareTag("Obstacle"))
                 {
                     HpManager.Instance.InactivateHealth();
@@ -118,8 +100,10 @@ public class PlayerController : MonoBehaviour
                     {
                         GameProgress.Instance.UpdateProgressBar();  
                     }
-            collision.gameObject.SetActive(false);
-        }
-        
+            }         
+
+            if(!collision.CompareTag("Lava"))
+                collision.gameObject.SetActive(false);
+        }   
     }
 }

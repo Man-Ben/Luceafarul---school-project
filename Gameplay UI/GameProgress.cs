@@ -8,6 +8,7 @@ public class GameProgress : MonoBehaviour
     [SerializeField] TextMeshProUGUI scoreText;
 
     [Space]
+
     [Header ("Progress Bars")]
     [SerializeField] Image progressImage;
 
@@ -59,9 +60,16 @@ public class GameProgress : MonoBehaviour
 
     void CheckProgress()
     {
-        int minAmountScore = 1000;
+        //IMPORTANT: DO NOT FORGET TO CHANGE THE VALUE OF THE PROGRESS BAR'S FILL AMOUNT IN THE IF!!
+        //IT WAS REDUCED FOR TESTING REASONS!!
+        int minAmountScore = 100;
 
-        if(score == minAmountScore && progressImage.fillAmount == 1.0f)
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        int nextSceneIndex = SceneManager.GetActiveScene().buildIndex;
+
+        if(score >= minAmountScore && progressImage.fillAmount == 0.25f)
+            if(nextSceneIndex != 3)
+                SceneManager.LoadScene(nextSceneIndex + 1);
+            else
+                SceneManager.LoadScene(0);
     }
 }

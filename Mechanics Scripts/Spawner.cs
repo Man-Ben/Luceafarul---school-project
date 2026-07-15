@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Spawner : MonoBehaviour
 {
@@ -31,6 +32,7 @@ public class Spawner : MonoBehaviour
         int possibility = Random.Range(1, 100);
 
         GameObject gotObject;
+        GameObject fireProtection;
 
         switch(possibility)
         {
@@ -39,10 +41,20 @@ public class Spawner : MonoBehaviour
             break;
 
             case > 80 and <= 95:
+
                 if(HpManager.Instance.healthState == HpManager.HealthState.Damaged)
                     gotObject = Pool.Instance.GivePooledObject(Pool.PoolState.Recovery);
                 else
                     gotObject = Pool.Instance.GivePooledObject(Pool.PoolState.Obstacle);
+
+                if(SceneManager.GetActiveScene().buildIndex == 2)
+                {
+                    fireProtection = Pool.Instance.GivePooledObject(Pool.PoolState.FireProtection);
+
+                    if(fireProtection != null)
+                        fireProtection.transform.position = new Vector2(gameObject.transform.position.x, GetSpawn());
+                }
+                    
             break;
 
             case > 95:
@@ -51,7 +63,7 @@ public class Spawner : MonoBehaviour
         }
 
     if(gotObject != null)
-        gotObject.transform.position = new Vector2(20, GetSpawn());
+        gotObject.transform.position = new Vector2(gameObject.transform.position.x, GetSpawn());
     }
 
     float GetSpawn()
@@ -60,6 +72,13 @@ public class Spawner : MonoBehaviour
         float maxY = 0;
 
         float y = Random.Range(minY, maxY);
+        float lastSpawn = 0;
+        float minGap = 2f;
+
+        if(Mathf.Abs(y-lastSpawn) < minGap)
+            y += minGap * Mathf.Sign(Random.value - 0.5f);
+
+        lastSpawn = y;
 
         return y;
     }

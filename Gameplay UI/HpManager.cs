@@ -38,6 +38,12 @@ public class HpManager : MonoBehaviour
         ActivateHealth();
     }
 
+    void Update()
+    {
+        if(remainingHealth == totalHealth)
+            healthState = HealthState.FullHealth;
+    }
+
     void ActivateHealth()
     {
         for(int i = 0; i < totalHealth; i++)
