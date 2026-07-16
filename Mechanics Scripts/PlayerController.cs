@@ -68,42 +68,41 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if(UIManager.Instance.gameState == UIManager.GameState.Neutral)
-        {
-            if(ShieldScript.Instance.shieldState != ShieldScript.ShieldState.Active)
-            {
-                if(SceneManager.GetActiveScene().buildIndex == 2)
-                {
-                    if(collision.CompareTag("Lava") && playerState == PlayerState.Neutral)
-                    {
-                        HpManager.Instance.InactivateHealth();
-                    }
-                    
-                    if(collision.CompareTag("FireProtection") && playerState == PlayerState.Neutral)
-                    {
-                        playerState = PlayerState.hasFireProtection;
-                        StartCoroutine(InactivateFireProtection());
-                    }
-                }
-                
-                if(collision.CompareTag("Obstacle"))
-                {
-                    HpManager.Instance.InactivateHealth();
-                }
-                else 
-                    if(collision.CompareTag("Recovery"))
-                    {
-                        HpManager.Instance.Healing();
-                    }
-                else
-                    if(collision.CompareTag("Collectible"))
-                    {
-                        GameProgress.Instance.UpdateProgressBar();  
-                    }
-            }         
+        if(UIManager.Instance.gameState != UIManager.GameState.Neutral)
+            return;
 
-            if(!collision.CompareTag("Lava"))
-                collision.gameObject.SetActive(false);
+        if(ShieldScript.Instance.shieldState != ShieldScript.ShieldState.Active)
+        {
+            if(SceneManager.GetActiveScene().buildIndex == 2)
+            if(collision.CompareTag("Lava") && playerState == PlayerState.Neutral)
+            {
+                HpManager.Instance.InactivateHealth();
+            }
+            
+            if(collision.CompareTag("FireProtection") && playerState == PlayerState.Neutral)
+            {
+                playerState = PlayerState.hasFireProtection;
+                StartCoroutine(InactivateFireProtection());
+            }
+                
+        if(collision.CompareTag("Obstacle"))
+        {
+            HpManager.Instance.InactivateHealth();
+        }
+        else 
+            if(collision.CompareTag("Recovery"))
+            {
+                HpManager.Instance.Healing();
+            }
+        else
+            if(collision.CompareTag("Collectible"))
+            {
+                GameProgress.Instance.UpdateProgressBar();  
+            }    
         }   
+
+        if(!collision.CompareTag("Lava"))
+            collision.gameObject.SetActive(false);
+    
     }
 }

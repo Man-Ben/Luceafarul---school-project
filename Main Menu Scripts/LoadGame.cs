@@ -5,16 +5,33 @@ using UnityEngine.UI;
 
 public class LoadGame : MonoBehaviour
 {
-    [Header ("Set a button for loading")]
+    [Header ("Loading Buttons")]
     [SerializeField] Button load;
-    
+
+    [Header ("Difficulty Buttons")]
+    [SerializeField] Button easy;
+    [SerializeField] Button medium;
+    [SerializeField] Button hard;
 
     void Awake()
     {
+        AddListenerToUI();
+    }
+
+    void AddListenerToUI()
+    {
         load.onClick.AddListener(Load);
+        easy.onClick.AddListener(() => SetDifficulty());
+        medium.onClick.AddListener(() => SetDifficulty());
+        hard.onClick.AddListener(() => SetDifficulty());
     }    
 
-    [Description ("Loads the first scene or the saved scene when called")]
+    void SetDifficulty()
+    {
+        SceneManager.LoadScene(1);
+    }
+
+    [Description ("Loads the saved scene when called")]
     void Load()
     {
         SceneManager.LoadScene(1);
