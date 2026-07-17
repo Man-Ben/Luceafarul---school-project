@@ -120,6 +120,8 @@ public class UIManager : MonoBehaviour
 
     void OnYesButtonClicked()
     {
+        JsonManager.Instance.SavePlayerData();
+
         SceneManager.LoadScene(0);
     }
 

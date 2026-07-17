@@ -7,7 +7,7 @@ public class HpManager : MonoBehaviour
     [SerializeField] List<GameObject> health;
 
     int totalHealth;
-    int remainingHealth;
+    public int remainingHealth;
 
     
     public enum HealthState
@@ -32,7 +32,7 @@ public class HpManager : MonoBehaviour
 
         Instance = this;
 
-        totalHealth = 3;
+        totalHealth = JsonManager.Instance.gameData.maxHP;
         remainingHealth = totalHealth;
 
         ActivateHealth();

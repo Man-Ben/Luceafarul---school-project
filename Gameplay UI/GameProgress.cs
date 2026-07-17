@@ -12,21 +12,12 @@ public class GameProgress : MonoBehaviour
     [Header ("Progress Bars")]
     [SerializeField] Image progressImage;
 
-    int score;
-    
-    public enum Progress
-    {
-        ZeroProgress,
-        HaveAllCollectibles,
-        HaveMinimumScore
-    }
+    public float currentProgress;
+    public int currentScore;
 
-    [Space]
-
-    [Header("Game Progress")]
-
-    public Progress progress;
-
+    int score = 0;
+    int minAmountScore;
+    float progressToAdd;
     public static GameProgress Instance;
 
     void Awake()
@@ -38,6 +29,9 @@ public class GameProgress : MonoBehaviour
         }
 
         Instance = this;
+
+        minAmountScore = JsonManager.Instance.gameData.minScore;
+        progressToAdd = JsonManager.Instance.gameData.progressToAdd;
         
     }
 
@@ -51,22 +45,22 @@ public class GameProgress : MonoBehaviour
         score += scoreToAdd;
 
         scoreText.text = $"Score: {score}";
+        
+        currentScore = score;
     }
 
     public void UpdateProgressBar()
     {
-        progressImage.fillAmount += 0.25f;
+        progressImage.fillAmount += progressToAdd;
+
+        currentProgress = progressImage.fillAmount;
     }
 
     void CheckProgress()
     {
-        //IMPORTANT: DO NOT FORGET TO CHANGE THE VALUE OF THE PROGRESS BAR'S FILL AMOUNT IN THE IF!!
-        //IT WAS REDUCED FOR TESTING REASONS!!
-        int minAmountScore = 100;
-
         int nextSceneIndex = SceneManager.GetActiveScene().buildIndex;
 
-        if(score >= minAmountScore && progressImage.fillAmount == 0.25f)
+        if(score >= minAmountScore && progressImage.fillAmount >= 0.05f)
             if(nextSceneIndex != 3)
                 SceneManager.LoadScene(nextSceneIndex + 1);
             else
