@@ -15,7 +15,9 @@ public class PlayerData
     public string difficulty;
 
     public int reachedScore;
-    public float reachedProgress;
     public int currentHP;
     public int currentScene;
+    
+    public float reachedProgress;
+    
 }

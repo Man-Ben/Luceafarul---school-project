@@ -1,18 +1,22 @@
 using UnityEngine;
 using System;
 using System.IO;
-using UnityEditor.Overlays;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class JsonManager : MonoBehaviour
 {
     TextAsset configPath;
+
+    string saveFilePath;
+
+    public string saveFile;
+    public List<string> savings;
+
     public static JsonManager Instance {get; private set;}
 
     public GameData gameData {get; set;}
     public PlayerData playerData {get; set;}
-
-    public string saveFile;
 
     void Awake()
     {
@@ -23,7 +27,13 @@ public class JsonManager : MonoBehaviour
         }
 
         Instance = this;
+
         playerData = new PlayerData();
+
+        saveFilePath = Path.Combine(Application.persistentDataPath, "Saves");
+
+        if(!Directory.Exists(saveFilePath))
+            Directory.CreateDirectory(saveFilePath);
     }
 
     public GameData ReadGameConfig(string fileName)
@@ -36,25 +46,24 @@ public class JsonManager : MonoBehaviour
     }
 
     public void CreateSaving()
-    {
-        string saveFilePath = Path.Combine(Application.persistentDataPath, "Saves");
-        
-        if(!Directory.Exists(saveFilePath))
-            Directory.CreateDirectory(saveFilePath);
-
-        string saveName = DateTime.Now.ToString("dd-MM-YYYY");
+    {   
+        string saveName = DateTime.Now.ToString("dd-MM-yyyy-hh-mm-ss");
 
         saveFile = Path.Combine(saveFilePath, $"{saveName}.json");
     }
 
-    public void DisplayEverySave()
+    public void GetEverySave()
     {
-        
+        string[] files = Directory.GetFiles(saveFilePath, "*.json");
+
+        foreach(string file in files)
+            savings.Add(Path.GetFileNameWithoutExtension(file));
     }
+
 
     public void ReadPlayerData(string fileName)
     {
-        string path = Path.Combine(saveFile, fileName);
+        string path = Path.Combine(saveFilePath, fileName);
 
         if(File.Exists(path))
         {
@@ -70,8 +79,17 @@ public class JsonManager : MonoBehaviour
         playerData.reachedProgress = GameProgress.Instance.currentProgress;
         playerData.reachedScore = GameProgress.Instance.currentScore;
         
-        string json = JsonUtility.ToJson(gameData, true);
+        string json = JsonUtility.ToJson(playerData, true);
 
-        File.WriteAllText(saveFile, json);
+        string path = Path.Combine(saveFilePath, saveFile);
+
+        File.WriteAllText(path, json);
+    }
+
+    public void DeleteFile(string fileName)
+    {
+        string path = Path.Combine(saveFilePath, fileName);
+        
+        File.Delete(path);
     }
 }
