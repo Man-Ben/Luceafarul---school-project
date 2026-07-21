@@ -74,10 +74,14 @@ public class JsonManager : MonoBehaviour
 
     public void SavePlayerData()
     {
-        playerData.currentScene = SceneManager.GetActiveScene().buildIndex;
-        playerData.currentHP = HpManager.Instance.remainingHealth;
-        playerData.reachedProgress = GameProgress.Instance.currentProgress;
-        playerData.reachedScore = GameProgress.Instance.currentScore;
+        playerData.reachedScene = SceneManager.GetActiveScene().buildIndex;
+
+        if(UIManager.Instance.gameState != UIManager.GameState.GameOver)
+        {
+            playerData.currentHP = HpManager.Instance.remainingHealth;
+            playerData.reachedScore = GameProgress.Instance.currentScore;
+            playerData.reachedProgress = GameProgress.Instance.currentProgress;
+        }
         
         string json = JsonUtility.ToJson(playerData, true);
 

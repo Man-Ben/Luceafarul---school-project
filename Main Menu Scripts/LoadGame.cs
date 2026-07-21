@@ -19,6 +19,6 @@ public class LoadGame : MonoBehaviour
 
         JsonManager.Instance.saveFile = $"{GetComponentInChildren<TMP_Text>().text}.json";
 
-        SceneManager.LoadScene(JsonManager.Instance.playerData.currentScene);
+        SceneManager.LoadScene(JsonManager.Instance.playerData.reachedScene);
     }
 }

@@ -14,16 +14,14 @@ public class Spawner : MonoBehaviour
     IEnumerator SpawnDelay()
     {
         while(UIManager.Instance.gameState != UIManager.GameState.GameOver)
-        {
-            int randomDelay = Random.Range(1, 2);
-            
+        {   
             yield return new WaitUntil(() => UIManager.Instance.gameState == UIManager.GameState.Neutral);
 
             if(Pool.Instance != null)
                Spawn();
 
             
-            yield return new WaitForSeconds(randomDelay);
+            yield return new WaitForSecondsRealtime(0.5f);
         }
     }
 
@@ -42,7 +40,7 @@ public class Spawner : MonoBehaviour
 
             case > 80 and <= 95:
 
-                if(HpManager.Instance.healthState == HpManager.HealthState.Damaged)
+                if(HpManager.Instance.healthState == HpManager.HealthState.Damaged && JsonManager.Instance.playerData.difficulty != "Hard")
                     gotObject = Pool.Instance.GivePooledObject(Pool.PoolState.Recovery);
                 else
                     gotObject = Pool.Instance.GivePooledObject(Pool.PoolState.Obstacle);
@@ -72,13 +70,6 @@ public class Spawner : MonoBehaviour
         float maxY = 0;
 
         float y = Random.Range(minY, maxY);
-        float lastSpawn = 0;
-        float minGap = 2f;
-
-        if(Mathf.Abs(y-lastSpawn) < minGap)
-            y += minGap * Mathf.Sign(Random.value - 0.5f);
-
-        lastSpawn = y;
 
         return y;
     }

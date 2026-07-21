@@ -16,7 +16,7 @@ public class PlayerData
 
     public int reachedScore;
     public int currentHP;
-    public int currentScene;
+    public int reachedScene;
     
     public float reachedProgress;
     

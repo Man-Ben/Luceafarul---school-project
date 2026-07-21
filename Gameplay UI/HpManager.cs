@@ -33,21 +33,34 @@ public class HpManager : MonoBehaviour
         Instance = this;
 
         totalHealth = JsonManager.Instance.gameData.maxHP;
-        remainingHealth = totalHealth;
+
+        if(JsonManager.Instance.playerData.currentHP == 0)
+            remainingHealth = totalHealth;
+        else
+            remainingHealth = JsonManager.Instance.playerData.currentHP;
 
         ActivateHealth();
     }
 
     void Update()
     {
-        if(remainingHealth == totalHealth)
+        if(remainingHealth != totalHealth)
+            healthState = HealthState.Damaged;
+        else
             healthState = HealthState.FullHealth;
     }
 
     void ActivateHealth()
     {
         for(int i = 0; i < totalHealth; i++)
+        {        
+            if(JsonManager.Instance.playerData.currentHP != 0)
+                if(i == JsonManager.Instance.playerData.currentHP)
+                    break;
+
             health[i].gameObject.SetActive(true);
+        }
+            
     }
 
     public void InactivateHealth()

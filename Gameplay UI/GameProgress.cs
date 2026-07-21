@@ -32,6 +32,10 @@ public class GameProgress : MonoBehaviour
 
         minAmountScore = JsonManager.Instance.gameData.minScore;
         progressToAdd = JsonManager.Instance.gameData.progressToAdd;
+
+        progressImage.fillAmount += JsonManager.Instance.playerData.reachedProgress;
+
+        UpdateScore(JsonManager.Instance.playerData.reachedScore);
         
     }
 
@@ -61,9 +65,15 @@ public class GameProgress : MonoBehaviour
         int nextSceneIndex = SceneManager.GetActiveScene().buildIndex;
 
         if(score >= minAmountScore && progressImage.fillAmount >= 0.05f)
+        {
+            currentProgress = 0;
+            currentScore = 0;
+            JsonManager.Instance.SavePlayerData();
+
             if(nextSceneIndex != 3)
                 SceneManager.LoadScene(nextSceneIndex + 1);
             else
                 SceneManager.LoadScene(0);
+        }
     }
 }

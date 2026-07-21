@@ -48,7 +48,9 @@ public class Pool : MonoBehaviour
 
         PoolingObjects(obstaclesToPool, pooledObstacles, 20);
         PoolingObjects(collectiblesToPool, pooledCollectibles, 5);
-        PoolingObjects(recoveriesToPool, pooledRecoveries, 10);
+
+        if(JsonManager.Instance.playerData.difficulty != "Hard")
+            PoolingObjects(recoveriesToPool, pooledRecoveries, 10);
 
         if(SceneManager.GetActiveScene().buildIndex == 2)
             PoolingObjects(fireProtectionToPool, pooledFireProtection, 10);

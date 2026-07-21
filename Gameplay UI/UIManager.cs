@@ -77,7 +77,7 @@ public class UIManager : MonoBehaviour
 
     void OnRestartButtonClicked()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     void OnQuitButtonClicked()
@@ -107,6 +107,7 @@ public class UIManager : MonoBehaviour
         pauseMenu.SetActive(true);
         quitButton.gameObject.SetActive(true);
         gameState = GameState.Paused;
+
         pauseButtonMobile.gameObject.SetActive(false);
     }
 
@@ -114,7 +115,10 @@ public class UIManager : MonoBehaviour
     {
         pauseMenu.SetActive(false);
         quitButton.gameObject.SetActive(false);
-        pauseButtonMobile.gameObject.SetActive(true);
+
+        if(!pauseButtonMobile.gameObject.activeInHierarchy)
+            pauseButtonMobile.gameObject.SetActive(true);
+    
         gameState = GameState.Neutral;
     }
 
